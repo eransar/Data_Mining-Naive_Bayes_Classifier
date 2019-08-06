@@ -10,7 +10,7 @@ class ModelTest:
     def handleData(self):
         self.trainer.fillMissingValues()
         self.trainer.discretization()
-        k=5
+
 
     def getData(self):
         return self.trainer.getData()

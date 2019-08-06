@@ -3,6 +3,7 @@ import tkMessageBox
 import ModelBuilder
 import ModelTrainer
 import ModelTest
+import ModelClassifier
 from Tkinter import Tk, Label, Button, Entry,StringVar
 from tkFileDialog import askdirectory
 
@@ -51,7 +52,7 @@ class GUI:
 
         # #Logic
         self.modelBuilder='' # build the model
-        self.modelTrainer='' # use the train file and clean it
+        self.modelTrainer=ModelTrainer.ModelTrainer() # use the train file and clean it
         self.modelTest=''
         self.modelClassifier='' #classification
 
@@ -86,6 +87,7 @@ class GUI:
             self.isTrain,
             self.modelBuilder,
             self.entry_bins.get())
+        self.modelTrainer.readFile()
         maxbins=self.modelTrainer.getMaxbins()
         if maxbins < int(self.entry_bins.get()):
             tkMessageBox.showinfo("Alert Message", "Invalid number of bins")
@@ -100,6 +102,7 @@ class GUI:
     def classify(self):
         self.modelTest = ModelTest.ModelTest(self.isTest,self.modelBuilder,self.entry_bins.get())
         self.modelTest.handleData()
+        self.modelClassifier=ModelClassifier.ModelClassifier(self.entry_browse.get(),self.modelTrainer.getData(),self.modelTest.getData())
         print("5")
 
     def DisplayDir(self):

@@ -4,10 +4,15 @@ import numpy as np
 
 
 class ModelTrainer:
-    def __init__(self,path, modelbuilder, bins_amount):
-        self.trainer = pd.read_csv(path, sep=",")
-        self.modelbuilder = modelbuilder.getModel()
+    def __init__(self,path='', modelbuilder='', bins_amount=''):
+        self.path=path
+        self.trainer=''
+        self.modelbuilder=modelbuilder
         self.bins_amount = bins_amount
+
+    def readFile(self):
+        self.trainer = pd.read_csv(self.path, sep=",")
+        self.modelbuilder = self.modelbuilder.getModel()
 
     def getMaxbins(self):
         return len(self.trainer.index)-1
