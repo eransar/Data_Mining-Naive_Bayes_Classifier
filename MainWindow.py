@@ -2,6 +2,7 @@ import os
 import tkMessageBox
 import ModelBuilder
 import ModelTrainer
+import ModelTest
 from Tkinter import Tk, Label, Button, Entry,StringVar
 from tkFileDialog import askdirectory
 
@@ -49,8 +50,10 @@ class GUI:
         self.button_classify['state'] = 'disabled'
 
         # #Logic
-        # self.ModelBuilder # build the model
-        # self.ModelClassifier #classification
+        self.modelBuilder='' # build the model
+        self.modelTrainer='' # use the train file and clean it
+        self.modelTest=''
+        self.modelClassifier='' #classification
 
     def validate_bins(self,v,d):
         try:
@@ -58,7 +61,6 @@ class GUI:
             if value >1:
                     if self.isBrowse:
                         self.button_build['state'] = 'normal'
-                        self.button_classify['state'] = 'normal'
                     return True
             else:
                 self.isBin=False
@@ -79,17 +81,25 @@ class GUI:
 
     def build(self):
         self.label_error.config(text="Begin building")
-        self.ModelBuilder = ModelBuilder.ModelBuilder(self.isStructure)
-        self.ModelTrainer = ModelTrainer.ModelTrainer(self.isTrain,self.ModelBuilder,self.entry_bins.get())
-        maxbins=self.ModelTrainer.getMaxbins()
+        self.modelBuilder = ModelBuilder.ModelBuilder(self.isStructure)
+        self.modelTrainer = ModelTrainer.ModelTrainer(
+            self.isTrain,
+            self.modelBuilder,
+            self.entry_bins.get())
+        maxbins=self.modelTrainer.getMaxbins()
         if maxbins < int(self.entry_bins.get()):
             tkMessageBox.showinfo("Alert Message", "Invalid number of bins")
         else:
-            self.ModelTrainer.fillMissingValues()
-            self.ModelTrainer.discretization()
-
+            self.modelTrainer.fillMissingValues()
+            self.modelTrainer.discretization()
+            tkMessageBox.showinfo("Alert Message",
+                         "Building classifier using train-set is done!")
+            self.button_classify['state'] = 'normal'
+            self.label_error.config(text='')
 
     def classify(self):
+        self.modelTest = ModelTest.ModelTest(self.isTest,self.modelBuilder,self.entry_bins.get())
+        self.modelTest.handleData()
         print("5")
 
     def DisplayDir(self):

@@ -39,3 +39,6 @@ class ModelTrainer:
             labels = range(len(cut_points) + 1)
         colBin = pd.cut(self.trainer[col], bins=break_points, labels=labels, include_lowest=True)
         return colBin
+
+    def getData(self):
+        return self.trainer
