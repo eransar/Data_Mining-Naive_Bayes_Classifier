@@ -14,7 +14,7 @@ class GUI:
 
     def __init__(self, master):
         self.master = master
-        master.title("Bayesian Classifier")
+        master.title("Naive Bayes Classifier")
         #set up vars for gui logic
         self.browse_text = StringVar()
         self.val_bins = master.register(self.validate_bins)
@@ -92,6 +92,9 @@ class GUI:
         maxbins=self.modelTrainer.getMaxbins()
         if maxbins < int(self.entry_bins.get()):
             tkMessageBox.showinfo("Alert Message", "Invalid number of bins")
+        elif os.stat(self.isTest).st_size == 0 or os.stat(self.isTrain).st_size == 0 or os.stat(self.isStructure).st_size ==0:
+            tkMessageBox.showinfo("Alert Message",
+                                  "One of the files is empty")
         else:
             self.modelTrainer.fillMissingValues()
             self.modelTrainer.discretization()
@@ -107,6 +110,7 @@ class GUI:
         self.modelClassifier.buildNaiveDictionary()
         self.modelClassifier.classify()
         self.modelClassifier.writeOutput()
+        tkMessageBox.showinfo("Alert Message", "Done classifying. output is ready in : {}".format(self.entry_browse.get()))
 
 
     def DisplayDir(self):

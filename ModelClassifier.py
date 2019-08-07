@@ -12,9 +12,6 @@ class ModelClassifier:
         self.resultdictionary=dict()
         self.output=[]
 
-    def setTest(self,test,builder):
-        self.test=test
-        self.builder=builder
 
     def buildNaiveDictionary(self):
         traindata=pd.DataFrame(self.train)
