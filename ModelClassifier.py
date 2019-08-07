@@ -1,5 +1,6 @@
 from __future__ import division
 import pandas as pd
+import os
 class ModelClassifier:
 
     def __init__(self,path,train,test='',builder='',bins=''):
@@ -25,8 +26,11 @@ class ModelClassifier:
         for column in traindata:
             column_values=traindata[column].unique()
             for value in column_values:
-                value_and_no=pd.DataFrame(traindata[traindata['class'] == 'N'][traindata[column] == value])[column].count()
-                value_and_yes = pd.DataFrame(traindata[traindata['class'] == 'Y'][traindata[column] == value])[column].count()
+                try:
+                    value_and_no=pd.DataFrame(traindata[traindata['class'] == 'N'][traindata[column] == value])[column].count()
+                    value_and_yes = pd.DataFrame(traindata[traindata['class'] == 'Y'][traindata[column] == value])[column].count()
+                except:
+                    pass
                 value_probability=(1.0/len(column_values)*1.0)
                 m_estimate_yes=((1.0*value_and_yes+value_probability*_m)/(self.yes_count+_m))
                 m_estimate_no = ((1.0 * value_and_no + value_probability * _m) / (self.no_count + _m))
@@ -51,14 +55,17 @@ class ModelClassifier:
             naive_yes = reduce(lambda x, y: x * y, yes_probabilities)
             naive_no = reduce(lambda x, y: x * y, no_probabilities)
             if naive_yes>naive_no:
-                self.output.append("{} {}".format(idx+1,"yes \n"))
+                self.output.append("{} {}".format(idx+1,"yes"))
             else:
-                self.output.append("{} {}".format(idx+1, "no \n"))
+                self.output.append("{} {}".format(idx+1, "no"))
 
 
     def writeOutput(self):
+        file_path=os.path.join(self.path,'output.txt')
+        with open(file_path, 'w') as f:
+            for item in self.output:
+                f.write("%s\n" % item)
 
-        print("path")
 
     def getdictionary(self):
         return self.resultdictionary
