@@ -4,6 +4,7 @@ import ModelBuilder
 import ModelTrainer
 import ModelTest
 import ModelClassifier
+import pandas
 from Tkinter import Tk, Label, Button, Entry,StringVar
 from tkFileDialog import askdirectory
 
@@ -53,7 +54,7 @@ class GUI:
         # #Logic
         self.modelBuilder='' # build the model
         self.modelTrainer=ModelTrainer.ModelTrainer() # use the train file and clean it
-        self.modelTest=''
+        self.modelTest=ModelTest.ModelTest()
         self.modelClassifier='' #classification
 
     def validate_bins(self,v,d):
@@ -100,10 +101,13 @@ class GUI:
             self.label_error.config(text='')
 
     def classify(self):
-        self.modelTest = ModelTest.ModelTest(self.isTest,self.modelBuilder,self.entry_bins.get())
-        self.modelTest.handleData()
-        self.modelClassifier=ModelClassifier.ModelClassifier(self.entry_browse.get(),self.modelTrainer.getData(),self.modelTest.getData())
-        print("5")
+        self.modelTest.setdata(self.isTest,self.modelBuilder,self.entry_bins.get())
+        self.modelTest.cleanData()
+        self.modelClassifier=ModelClassifier.ModelClassifier(self.entry_browse.get(),self.modelTrainer.getData(),self.modelTest.getData(),self.modelBuilder,self.entry_bins.get())
+        self.modelClassifier.buildNaiveDictionary()
+        self.modelClassifier.classify()
+        self.modelClassifier.writeOutput()
+
 
     def DisplayDir(self):
         feedback = askdirectory()

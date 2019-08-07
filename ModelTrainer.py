@@ -47,3 +47,5 @@ class ModelTrainer:
 
     def getData(self):
         return self.trainer
+    def getbinsAmount(self):
+        return self.bins_amount
